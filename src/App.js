@@ -42,17 +42,22 @@ class SlideShow extends React.Component {
 
   slideTimer (delay) {
 
-    console.log('sliderTimer started ' + delay  )
+    console.log('sliderTimer started ' + delay + ' '  + new Date () )
 
+    setTimeout( () => {
+      console.log('sliderTimer Expired ' + new Date ())
+      this.nextSlide();
+    }, delay * 1000)
+  }
+
+  nextSlide () {
+    console.log('next slide triggered ' + new Date ())
     var currentSlide = this.state.activeIndex;
     var next = this.state.activeIndex + 1;
     if ( currentSlide == (this.state.maxIndex - 1)) {
       next = 0;
-    }
-    setTimeout( () => {
-      console.log('sliderTimer Expired')
-      this.jumpToSlide(next)
-    }, delay * 1000)
+    }      
+    this.jumpToSlide(next)    
   }
 
   jumpToSlide(index) {
