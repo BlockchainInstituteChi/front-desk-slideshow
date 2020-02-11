@@ -30,13 +30,38 @@ function classNames () {
 }
 
 class SlideShow extends React.Component {
-  constructor() {
-    super()
-    this.state = { activeIndex: 0 };
+  constructor(props) {
+    super(props)
+    this.state = { 
+      activeIndex: 0,
+      maxIndex : this.props.slides.length,
+      slides : this.props.slides
+    };
+    this.jumpToSlide = this.jumpToSlide;
   }
+
+  slideTimer (delay) {
+
+    console.log('sliderTimer started ' + delay  )
+
+    var currentSlide = this.state.activeIndex;
+    var next = this.state.activeIndex + 1;
+    if ( currentSlide == (this.state.maxIndex - 1)) {
+      next = 0;
+    }
+    setTimeout( () => {
+      console.log('sliderTimer Expired')
+      this.jumpToSlide(next)
+    }, delay * 1000)
+  }
+
   jumpToSlide(index) {
-    this.setState({ activeIndex: index });
+    this.slideTimer (this.state.slides[index].delay) 
+    this.setState({ 
+      activeIndex: index 
+    });
   }
+
   render() {
     return (
       <div className="slideshow">
@@ -68,10 +93,12 @@ class SlideShow extends React.Component {
 
 let _slides = [{
   imageUrl: "https://i.ytimg.com/vi/MxwjEacvrtY/hqdefault.jpg",
-  caption: "Allan Allan Al Al Allan"
+  caption: "Allan Allan Al Al Allan",
+  delay : 4
 }, {
   imageUrl: "https://pbs.twimg.com/profile_images/2576554888/s8vftzr3j0a9r703xdfn.jpeg",
-  caption: "Steve Steve Steve"
+  caption: "Steve Steve Steve",
+  delay: 3
 }];
 
 class App extends React.Component {
