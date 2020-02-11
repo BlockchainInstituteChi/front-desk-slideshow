@@ -2,25 +2,82 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+var hasOwn = {}.hasOwnProperty;
+
+function classNames () {
+  var classes = '';
+
+  for (var i = 0; i < arguments.length; i++) {
+    var arg = arguments[i];
+    if (!arg) continue;
+
+    var argType = typeof arg;
+
+    if (argType === 'string' || argType === 'number') {
+      classes += ' ' + arg;
+    } else if (Array.isArray(arg)) {
+      classes += ' ' + classNames.apply(null, arg);
+    } else if (argType === 'object') {
+      for (var key in arg) {
+        if (hasOwn.call(arg, key) && arg[key]) {
+          classes += ' ' + key;
+        }
+      }
+    }
+  }
+
+  return classes.substr(1);
+}
+
+class SlideShow extends React.Component {
+  constructor() {
+    super()
+    this.state = { activeIndex: 0 };
+  }
+  jumpToSlide(index) {
+    this.setState({ activeIndex: index });
+  }
+  render() {
+    return (
+      <div className="slideshow">
+        <ul className="slideshow-slides">
+          {
+            this.props.slides.map((slide, index) => (
+              <li className={ classNames({ active: index == this.state.activeIndex }) }>
+                <figure>
+                  <img src={ slide.imageUrl } />
+                  { slide.caption ? <figcaption>{ slide.caption }</figcaption> : null }
+                </figure>
+              </li>
+            ))
+          }
+        </ul>
+        <ul className="slideshow-dots">
+          {
+            this.props.slides.map((slide, index) => (
+              <li className={ (index == this.state.activeIndex) ? 'active': '' }>
+                <a onClick={ (event)=> this.jumpToSlide(index) }>{ index + 1 }</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    );
+  }
+}
+
+let _slides = [{
+  imageUrl: "https://i.ytimg.com/vi/MxwjEacvrtY/hqdefault.jpg",
+  caption: "Allan Allan Al Al Allan"
+}, {
+  imageUrl: "https://pbs.twimg.com/profile_images/2576554888/s8vftzr3j0a9r703xdfn.jpeg",
+  caption: "Steve Steve Steve"
+}];
+
+class App extends React.Component {
+  render() {
+    return <SlideShow slides={ _slides } />
+  }
 }
 
 export default App;
